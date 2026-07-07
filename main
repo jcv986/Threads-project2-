@@ -1,0 +1,67 @@
+// Source code is decompiled from a .class file using FernFlower decompiler (from Intellij IDEA).
+package problem2;
+
+public class Main {
+   private static final int EXPECTED_A1 = 125250;
+   private static final int EXPECTED_B1 = 31375;
+   private static final int EXPECTED_B2 = 145350;
+   private static final int EXPECTED_A2 = 190500;
+   private static final int EXPECTED_B3 = 270700;
+   private static final int EXPECTED_A3 = 350900;
+
+   public Main() {
+   }
+
+   public static void main(String[] args) throws InterruptedException {
+      SharedState s = runOnce();
+      System.out.println("Single run result:");
+      printState(s);
+      System.out.println();
+      int iterations = 100000;
+      int failures = 0;
+      long start = System.currentTimeMillis();
+
+      for(int i = 0; i < iterations; ++i) {
+         SharedState state = runOnce();
+         if (!isCorrect(state)) {
+            ++failures;
+            System.out.println("MISMATCH at iteration " + i + ":");
+            printState(state);
+         }
+      }
+
+      long elapsedMs = System.currentTimeMillis() - start;
+      System.out.println("Ran " + iterations + " iterations in " + elapsedMs + " ms");
+      System.out.println("Failures: " + failures + " / " + iterations);
+      if (failures == 0) {
+         System.out.println("PASS: synchronisation held for every iteration.");
+      } else {
+         System.out.println("FAIL: synchronisation was violated " + failures + " time(s).");
+      }
+
+   }
+
+   private static SharedState runOnce() throws InterruptedException {
+      SharedState s = new SharedState();
+      Thread tA = new Thread(new ThreadA(s), "ThreadA");
+      Thread tB = new Thread(new ThreadB(s), "ThreadB");
+      tA.start();
+      tB.start();
+      tA.join();
+      tB.join();
+      return s;
+   }
+
+   private static boolean isCorrect(SharedState s) {
+      return s.A1 == 125250 && s.B1 == 31375 && s.B2 == 145350 && s.A2 == 190500 && s.B3 == 270700 && s.A3 == 350900;
+   }
+
+   private static void printState(SharedState s) {
+      System.out.println("A1 = " + s.A1);
+      System.out.println("B1 = " + s.B1);
+      System.out.println("B2 = " + s.B2);
+      System.out.println("A2 = " + s.A2);
+      System.out.println("B3 = " + s.B3);
+      System.out.println("A3 = " + s.A3);
+   }
+}
