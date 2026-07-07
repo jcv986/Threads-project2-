@@ -1,0 +1,20 @@
+// Source code is decompiled from a .class file using FernFlower decompiler (from Intellij IDEA).
+package problem2;
+
+import java.util.concurrent.Semaphore;
+
+public class SharedState {
+   volatile int A1;
+   volatile int A2;
+   volatile int A3;
+   volatile int B1;
+   volatile int B2;
+   volatile int B3;
+   final Semaphore sigA1Done = new Semaphore(0);
+   final Semaphore sigB2Done = new Semaphore(0);
+   final Semaphore sigA2Done = new Semaphore(0);
+   final Semaphore sigB3Done = new Semaphore(0);
+
+   public SharedState() {
+   }
+}
