@@ -1,0 +1,25 @@
+// Source code is decompiled from a .class file using FernFlower decompiler (from Intellij IDEA).
+package problem2;
+
+public class ThreadB implements Runnable {
+   private final SharedState s;
+
+   public ThreadB(SharedState s) {
+      this.s = s;
+   }
+
+   public void run() {
+      try {
+         this.s.B1 = (int)SumUtil.sum(250);
+         this.s.sigA1Done.acquire();
+         this.s.B2 = this.s.A1 + (int)SumUtil.sum(200);
+         this.s.sigB2Done.release();
+         this.s.sigA2Done.acquire();
+         this.s.B3 = this.s.A2 + (int)SumUtil.sum(400);
+         this.s.sigB3Done.release();
+      } catch (InterruptedException var2) {
+         Thread.currentThread().interrupt();
+      }
+
+   }
+}
